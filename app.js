@@ -16,8 +16,74 @@ const promptUser = () => {
         type: 'input',
         name: 'name',
         message: 'What is your name?'
+        },
+        {
+        type: 'input',
+        name: 'github',
+        message: 'What is your github username?'
+        },
+        {
+        type: 'input',
+        name: 'about',
+        message: 'provide info about u self'
         }
     ]);
 }
+
+const promptProject = portfolioData => {
+    if (!portfolioData.projects) {
+        portfolioData.projects = [];
+    }
+    console.log(`
+    ===============
+    add new project
+    ===============
+    `)
+    return inquirer.prompt([
+        {
+            type: 'input',
+            name: 'name',
+            message: 'what is the name of the project?'
+        },
+        {
+            type: 'input',
+            name: 'description',
+            message: 'provide description of the project'
+        },
+        {
+            type: 'checkbox',
+            name: 'languages',
+            message: 'what did you build this project with?',
+            choices: ['javascript', 'HTML', 'CSS', 'ES6', 'jquery', 'tailwind', 'node']
+        },
+        {
+            type: 'input',
+            name: 'link',
+            message: 'github link to project?'
+        },
+        {
+            type: 'confirm',
+            name: 'feature',
+            message: 'would you like to feature this project?',
+            default: false
+        },
+        {
+            type: 'confirm',
+            name: 'confirmAddProject',
+            message: 'would you like to add another project?',
+            default: false
+        }
+    ])
+        .then(projectData => {
+            portfolioData.projects.push(projectData)
+            if (projectData.confirmAddProject) {
+                return promptProject(portfolioData);
+            } else {
+                return portfolioData;
+            }
+        })
+}
     
-promptUser().then(answers => console.log(answers));
+promptUser()
+    .then(promptProject)
+    .then(portfolioData => console.log(portfolioData))
