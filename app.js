@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
-const fs = require('fs');
 const generatePage = require('./src/page-template');
+const generateSite = require('./utils/generate-site');
 
 const promptUser = () => {
     return inquirer.prompt([
@@ -129,20 +129,10 @@ const promptProject = portfolioData => {
     
 promptUser()
     .then(promptProject)
-    .then(portfolioData => {
-        const pageHTML = generatePage(portfolioData);
-        
-        fs.writeFile('./dist/index.html', pageHTML, err => {
-            if (err) throw err;
-        
-            console.log('file written to index.html')
-
-            fs.copyFile('src/style.css', './dist/styles.css', err => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                console.log("Style sheet successfully copied.")
-            })
-        })
+    .then(portfolioData => generatePage(portfolioData))
+    .then(writeFileResponse => {
+        console.log(writeFileResponse);
+        return copyFile()
     })
+    .then(copyFileResponse => console.log(copyFileResponse))
+    .catch(err => console.log(err));
