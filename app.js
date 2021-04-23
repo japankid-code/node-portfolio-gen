@@ -1,11 +1,11 @@
-const inquirer = require('inquirer');
-const fs = require('fs');
-const generatePage = require('./src/page-template');
+import { prompt } from 'inquirer';
+import { writeFile } from 'fs';
+import generatePage from './src/page-template';
 
 
 
 const promptUser = () => {
-    return inquirer.prompt([
+    return prompt([
         {
             type: 'input',
             name: 'name',
@@ -62,7 +62,7 @@ const promptProject = portfolioData => {
     add new project
     ===============
     `)
-    return inquirer.prompt([
+    return prompt([
         {
             type: 'input',
             name: 'name',
@@ -134,7 +134,7 @@ promptUser()
     .then(portfolioData => {
         const pageHTML = generatePage(portfolioData);
         
-        fs.writeFile('index.html', pageHTML, err => {
+        writeFile('index.html', pageHTML, err => {
             if (err) throw err;
         
             console.log('file written to index.html')
